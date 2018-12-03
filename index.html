@@ -9,7 +9,7 @@
             <label for="url">Receiver URL</label>
             <input type="text" id="url" name="url" value="http://192.168.1.4/api-receiver/api.php" style="width: 300px" readonly>
         </fieldset>
-        <h3>Incoming Requests</h3>
+        <h3>Incoming Requests <button type="button" onclick="clearLogs()">Clear Logs</button></h3>
         <table border="1">
             <thead>
                 <tr>
@@ -52,6 +52,18 @@
                     .then((json) => {
                         addRows(json.logs);
                     });
+            }
+
+            function clearLogs() {
+                fetch("api.php", {
+                    method: 'DELETE'
+                })
+                .then((response) => {
+                    return response.json();
+                })
+                .then(() => {
+                    fetchLogs();
+                })
             }
 
             setInterval(function () {
