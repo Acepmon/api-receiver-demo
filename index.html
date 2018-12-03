@@ -1,0 +1,64 @@
+<html>
+    <head>
+        <title>API Receiver Demo</title>
+    </head>
+
+    <body>
+        <h1>API Receiver Demo</h1>
+        <fieldset>
+            <label for="url">Receiver URL</label>
+            <input type="text" id="url" name="url" value="http://192.168.1.4/api-receiver/api.php" style="width: 300px" readonly>
+        </fieldset>
+        <h3>Incoming Requests</h3>
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Camera</th>
+                    <th>Type</th>
+                    <th>Data</th>
+                </tr>
+            </thead>
+            <tbody id="logs"></tbody>
+        </table>
+
+        <script>
+            function addRow(data) {
+                var object = JSON.parse(data);
+                var tr = document.createElement('tr');
+                var td1 = document.createElement('td');
+                var td2 = document.createElement('td');
+                var td3 = document.createElement('td');
+                td1.textContent = '' + object.camera_id;
+                td2.textContent = '' + object.type;
+                td3.textContent = '' + JSON.stringify(object.data);
+                tr.append(td1);
+                tr.append(td2);
+                tr.append(td3);
+                document.getElementById('logs').append(tr);
+            }
+
+            function addRows(array) {
+                document.getElementById('logs').innerHTML = '';
+                for (var i = 0; i < array.length; i++) {
+                    addRow(array[i]);
+                }
+            }
+
+            function fetchLogs() {
+                fetch("logs.json")
+                    .then((response) => {
+                        return response.json();
+                    })
+                    .then((json) => {
+                        addRows(json.logs);
+                    });
+            }
+
+            setInterval(function () {
+                fetchLogs();
+            }, 3000);
+
+            fetchLogs();
+        </script>
+    </body>
+</html>
